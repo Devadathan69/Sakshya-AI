@@ -1,9 +1,26 @@
 PaddleOCR and Poppler installation notes
 ======================================
 
-This project uses PaddleOCR for OCR. PaddleOCR requires the PaddlePaddle runtime
-(`paddlepaddle`) to be installed separately and depends on your OS and Python
-version. Follow the steps below for a typical Windows CPU installation.
+Remote-first OCR (default)
+---------------------------
+
+This project uses a remote PaddleOCR API by default. Configure the remote
+endpoint in `backend/.env` using the `PADDLE_OCR_URL` environment variable:
+
+```env
+PADDLE_OCR_URL=https://your-remote-paddle-endpoint.example/
+```
+
+With the remote endpoint set, the backend will send images (multipart `file`)
+to that URL and expect a JSON response containing the recognized `text` and
+optionally a numeric `confidence` or `avg_conf` field.
+
+Local PaddleOCR (optional)
+--------------------------
+
+If you prefer to run PaddleOCR locally instead of using the remote API, follow
+the steps below to install `paddlepaddle` and `paddleocr`. Local Paddle is
+optional — the remote API is the default and recommended for easiest setup.
 
 1) Update pip and install PaddlePaddle (CPU)
 
