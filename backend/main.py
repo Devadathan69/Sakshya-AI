@@ -138,7 +138,9 @@ async def analyze_statements(request: AnalyzeRequest):
 
 
     # 5. Report
+    print(f"DEBUG: Generating report with {len(report_rows)} rows")
     report = generate_final_report(report_rows, detected_lang)
+    print(f"DEBUG: Report generated. Total rows: {len(report.rows)}")
     
     # Output is produced in the input language per prompts; set metadata accordingly.
     report.input_language = detected_lang

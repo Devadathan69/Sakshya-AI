@@ -50,7 +50,7 @@ function App() {
       const preview = typeof data.content_preview === 'string' ? data.content_preview : String(data.content_preview || '');
       setText(preview);
       // Show short preview alert for immediate feedback
-      alert(`Extracted text from ${data.filename}. Preview: ${preview.slice(0,200)}\n\nPlease review and edit if necessary.`);
+      alert(`Extracted text from ${data.filename}. Preview: ${preview.slice(0, 200)}\n\nPlease review and edit if necessary.`);
     } catch (err) {
       console.error(err);
       alert("Failed to upload/extract text: " + (err as Error).message);
@@ -81,6 +81,7 @@ function App() {
       if (!response.ok) throw new Error("Analysis failed");
 
       const data = await response.json();
+      console.log("DEBUG: Received Analysis Report:", data);
       setReport(data);
     } catch (error) {
       console.error("Fetch error details:", error);
@@ -247,6 +248,17 @@ function App() {
               <p className="font-bold mb-2">LEGAL DISCLAIMER</p>
               <p>{report.disclaimer}</p>
             </div>
+          </div>
+        )}
+
+        {report && (
+          <div className="mt-12 p-4 border-t border-slate-800 text-slate-500 text-xs">
+            <details>
+              <summary className="cursor-pointer hover:text-slate-300">Debug JSON View (Click to expand)</summary>
+              <pre className="mt-4 p-4 bg-slate-900 rounded overflow-auto h-64">
+                {JSON.stringify(report, null, 2)}
+              </pre>
+            </details>
           </div>
         )}
 

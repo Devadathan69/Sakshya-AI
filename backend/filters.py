@@ -24,53 +24,33 @@ def get_action_category(action_text: str) -> str:
 
 def are_actions_compatible(action1: str, action2: str) -> bool:
     """
-    Returns True if actions belong to the same category OR if one is denial of the other.
+    Returns True if events should be compared by LLM.
+    Strategy: Be permissive to let LLM decide on semantic compatibility.
     """
     cat1 = get_action_category(action1)
     cat2 = get_action_category(action2)
     
-    # 1. Presence/Movement vs Absence Logic
-    # Rule: Presence <-> Movement = Consistent (SKIP)
-    if {cat1, cat2}.issubset({"presence", "movement"}):
-        return False
-        
-    # Rule: Presence/Movement <-> Absence = Contradiction (COMPARE)
-    if "absence" in {cat1, cat2}:
-        if {"presence", "movement"}.intersection({cat1, cat2}):
-             return True
-        # Absence vs Absence = Consistent (SKIP)
-        if cat1 == "absence" and cat2 == "absence":
-             return False
-
-    # 2. Existing Logic
-    # Violence vs Denial (often "did not hit") - simplified check
-    # Logic: if categories match, compare.
-    if cat1 == cat2:
+    # Only skip comparing "other" vs "other" (unclassifiable actions)
+    # This ensures most event pairs reach the LLM for comparison
+    # Was skipping "other" vs "other", but this is too aggressive for multi-lingual 
+    # or natural language outputs that don't match keywords.
+    # We should allow "other" comparisons to ensure we don't miss valid events.
+    if cat1 == "other" and cat2 == "other":
         return True
     
-    # Allow violence vs weapon (often related)
-    if {cat1, cat2} == {"violence", "weapon"}:
-        return True
-        
-    return False
+    # Always compare if both actions are in recognized categories
+    return True
 
 # --- RULE B: ACTOR CONSISTENCY ---
 def are_actors_consistent(actor1: str, actor2: str) -> bool:
     """
-    Returns True if actors are likely the same person or compatible context.
+    Returns True to allow comparisons. Let LLM decide if actors are related.
+    This is more permissive to avoid filtering out valid comparisons.
     """
-    if not actor1 or not actor2:
-        return True # specific logic: if one is unknown, we might want to compare to see if it fills the gap
-        
-    a1 = actor1.lower().strip()
-    a2 = actor2.lower().strip()
-    
-    if a1 == a2:
-        return True
-    if a1 in a2 or a2 in a1: # "Accused A" vs "A"
-        return True
-        
-    return False
+    # Always allow comparison - the LLM will determine if actors are related
+    # This is especially important when comparing witness statements where
+    # one witness uses first person ("I") and another uses third person (names)
+    return True
 
 # --- MAIN FILTER FUNCTION ---
 def should_compare_events(e1: Event, e2: Event) -> bool:
