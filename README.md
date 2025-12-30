@@ -29,8 +29,14 @@ The system identifies **semantic contradictions** and **material omissions** bet
   - **Image OCR**: Handwritten documents via remote PaddleOCR API
   - Automatic text extraction and preprocessing
   
+- **🔐 Flexible Authentication**:
+  - **Guest Mode**: Use all analysis features without logging in (Privacy-focused)
+  - **Advocate Login**: Sign up/Log in to save and manage case history
+  - **My Analyses**: Dashboard to view past analyses with summaries, actors, and severity scores
+
 - **🎨 Judge-Friendly UI**:
   - Clean React-based dashboard
+  - **Authentication flows** (Guest/User)
   - Real-time analysis feedback
   - Severity badges (Critical/Minor)
   - Legal footnotes and explanations
@@ -41,6 +47,7 @@ The system identifies **semantic contradictions** and **material omissions** bet
 |-----------|-----------|
 | **Backend** | Python 3.10+, FastAPI, Uvicorn |
 | **Frontend** | React 19.2, TypeScript, Vite, TailwindCSS |
+| **Auth & DB** | Firebase Authentication, Cloud Firestore |
 | **AI Engine** | Google Gemini 2.5 Flash (`gemini-2.5-flash-lite`) |
 | **Language Detection** | langdetect |
 | **OCR** | Remote PaddleOCR API, pdfplumber, OpenCV |
@@ -52,6 +59,7 @@ Before setting up, ensure you have:
 - **Python 3.10+** installed
 - **Node.js & npm** (v16+)
 - **Google Gemini API Key** (free tier available at [ai.google.dev](https://ai.google.dev))
+- **Firebase Project Config** (for Auth & History features)
 - **Git**
 
 ## 🚀 Installation & Setup
@@ -384,6 +392,10 @@ For issues, feature requests, or feedback:
 
 ## 🔄 Recent Updates (v1.1)
 
+- ✅ **Authentication System**: Guest Mode, Sign Up, and Login functionality
+- ✅ **Analysis History**: Firestore integration to save and review past analyses
+- ✅ **Rich History Details**: View actors, preview text, and severity summaries in history
+- ✅ **Branding**: Updated logo and application title
 - ✅ **Malayalam & all Indian language support** with same-language output
 - ✅ Improved extraction and comparison prompts with language preservation
 - ✅ Enhanced error handling and JSON response parsing

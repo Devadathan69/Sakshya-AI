@@ -147,7 +147,7 @@ function App() {
       <header className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-10">
         <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-lg shadow-blue-500/20"></div>
+            <img src="/logo.jpeg" alt="Sakshya AI Logo" className="h-8 w-8 rounded-lg object-cover" />
             <h1 className="text-xl font-bold tracking-tight text-white">Sakshya AI <span className="text-xs font-normal text-slate-400 bg-slate-800 px-2 py-0.5 rounded ml-2">MVP</span></h1>
           </div>
           <div className="flex items-center gap-4">
