@@ -48,7 +48,7 @@ The system identifies **semantic contradictions** and **material omissions** bet
 | **Backend** | Python 3.10+, FastAPI, Uvicorn |
 | **Frontend** | React 19.2, TypeScript, Vite, TailwindCSS |
 | **Auth & DB** | Firebase Authentication, Cloud Firestore |
-| **AI Engine** | Google Gemini 2.5 Flash (`gemini-2.5-flash-lite`) |
+| **AI Engine** | Google Gemini 2.5 Flash (`gemini-2.5-flash`) |
 | **Language Detection** | langdetect |
 | **OCR** | Remote PaddleOCR API, pdfplumber, OpenCV |
 
@@ -388,7 +388,7 @@ Lawyers and judges must independently verify all findings against original case 
 
 For issues, feature requests, or feedback:
 - Open an issue on GitHub
-- Contact: [your-email@example.com]
+- Contact: [devadathanappu69@gmail.com]
 
 ## 🔄 Recent Updates (v1.1)
 
