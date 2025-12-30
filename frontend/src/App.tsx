@@ -8,6 +8,8 @@ import { useAuth } from './contexts/AuthContext';
 import { db } from './firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
+const API_BASE = import.meta.env.VITE_API_URL || ''; // Fallback to relative path for proxy if not set
+
 function App() {
   const { user, logout, loading: authLoading } = useAuth();
   const [s1Text, setS1Text] = useState("");
@@ -35,7 +37,7 @@ function App() {
       formData.append("file", file);
       formData.append("statement_type", type);
 
-      const response = await fetch('/upload-document', {
+      const response = await fetch(`${API_BASE}/upload-document`, {
         method: 'POST',
         body: formData
       });
@@ -108,7 +110,7 @@ function App() {
     setLoading(true);
     setReport(null);
     try {
-      const response = await fetch('/analyze', {
+      const response = await fetch(`${API_BASE}/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
