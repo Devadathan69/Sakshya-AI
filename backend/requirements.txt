@@ -11,13 +11,7 @@ pdfplumber
 opencv-python-headless
 Pillow
 requests
-transformers
-peft
-accelerate
-torch
-sentencepiece
-protobuf
-bitsandbytes
+requests
 
 # Note: This project uses a remote PaddleOCR API by default (configured via
 # the PADDLE_OCR_URL environment variable in backend/.env). Local `paddleocr`
