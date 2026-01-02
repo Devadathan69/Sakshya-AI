@@ -24,7 +24,7 @@ export default function SingleWitnessView() {
 
     const handleFileUpload = async (
         e: React.ChangeEvent<HTMLInputElement>,
-        setText: (t: string) => void,
+        setText: React.Dispatch<React.SetStateAction<string>>,
         type: string
     ) => {
         if (!e.target.files || e.target.files.length === 0) return;
@@ -67,7 +67,7 @@ export default function SingleWitnessView() {
 
     const callSpeechToText = async (
         audioBlob: Blob,
-        setText: (t: string) => void,
+        setText: React.Dispatch<React.SetStateAction<string>>,
         statementType: string
     ) => {
         const formData = new FormData();
@@ -96,7 +96,7 @@ export default function SingleWitnessView() {
 
     const handleAudioUpload = async (
         e: React.ChangeEvent<HTMLInputElement>,
-        setText: (t: string) => void,
+        setText: React.Dispatch<React.SetStateAction<string>>,
         statementType: string,
         target: 's1' | 's2',
     ) => {
