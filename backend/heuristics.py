@@ -56,5 +56,6 @@ def apply_legal_heuristics(comparison: ComparisonResult, event1: Event, event2: 
         classification=classification,
         severity=severity,
         legal_basis=legal_basis,
+        explanation=explanation,
         source_sentence_refs=[event1.source_sentence, event2.source_sentence]
     )

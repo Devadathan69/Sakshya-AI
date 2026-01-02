@@ -44,30 +44,46 @@ def are_actions_compatible(action1: str, action2: str) -> bool:
 # --- RULE B: ACTOR CONSISTENCY ---
 def are_actors_consistent(actor1: str, actor2: str) -> bool:
     """
-    Returns True to allow comparisons. Let LLM decide if actors are related.
-    This is more permissive to avoid filtering out valid comparisons.
+    Returns True if actors are likely the same person or if one is a pronoun/generic.
+    Stricter filtering to avoid comparing "John did X" vs "Mary did Y".
     """
-    # Always allow comparison - the LLM will determine if actors are related
-    # This is especially important when comparing witness statements where
-    # one witness uses first person ("I") and another uses third person (names)
-    return True
+    a1 = actor1.lower().strip()
+    a2 = actor2.lower().strip()
+
+    # 1. Exact Match
+    if a1 == a2:
+        return True
+
+    # 2. Allow Pronouns/Generic (Permissive fallback)
+    # If we filter these out, we might miss "I went" vs "Raju went" (if I=Raju)
+    # But we definitely want to block "Raju" vs "Noel"
+    generics = {"i", "he", "she", "they", "we", "witness", "unknown", "accused", "victim"}
+    if a1 in generics or a2 in generics:
+        return True
+
+    # 3. Fuzzy Token Match (e.g. "Raju" vs "Raju Kumar")
+    tokens1 = set(a1.split())
+    tokens2 = set(a2.split())
+    
+    # If share any substantive token
+    if not tokens1.isdisjoint(tokens2):
+        return True
+
+    # Otherwise, assume different people -> Skip comparison
+    return False
 
 # --- MAIN FILTER FUNCTION ---
 def should_compare_events(e1: Event, e2: Event) -> bool:
     """
     Determines if two events should be passed to the LLM.
     """
-    # Rule B: Actor Consistency
+    # Rule B: Actor Consistency (Strict)
     if not are_actors_consistent(e1.actor, e2.actor):
         return False
-
-    # Rule A: Action Compatibility
-    if not are_actions_compatible(e1.action, e2.action):
-        return False
-        
-    # Rule C: Presence Context (Implicit filtering via Action Compatibility)
-    # If e1 is "presence" and e2 is "violence", they are different categories -> returns False.
-    # So Rule C is covered by Rule A.
+    
+    # If Actors match, we generally compare them to check for contradictions in actions (e.g. Sleeping vs Stabbing)
+    # So Action Compatibility is less important to filter *out*, but can be used to prioritize.
+    # For now, if actors match, we compare.
     
     return True
 

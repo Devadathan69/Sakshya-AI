@@ -92,3 +92,53 @@ async def translate_text(text: str, target_lang: str) -> str:
     except Exception as e:
         print(f"Translation Error (to {target_lang}): {e}")
         return text
+
+async def refine_legal_explanation(row: 'ReportRow', target_lang: str = "en") -> 'ReportRow':
+    """
+    Uses Gemini to generate a professional, detailed legal explanation and 
+    refine the legal basis citation.
+    """
+    if not GEMINI_API_KEY:
+        return row
+
+    model = genai.GenerativeModel(GEMINI_MODEL_NAME)
+    
+    target_lang_name = SUPPORTED_LANGUAGES.get(target_lang, target_lang)
+    
+    prompt = f"""You are an expert Indian legal analyst. Review the following discrepancy between two witness statements.
+
+    Statement 1: "{row.source_1}"
+    Statement 2: "{row.source_2}"
+    Detected Classification: {row.classification}
+    Preliminary Explanation (from initial analysis): "{row.explanation}"
+
+    Task:
+    1. **Refine and Expand** the Preliminary Explanation. You MUST incorporate the core insight of the Preliminary Explanation (e.g., specific time differences, location inputs) into your final output.
+    2. Write a **Detailed Legal Explanation** (2-3 sentences) explaining *why* this is a contradiction/omission and its significance in Indian Law.
+    3. Provide a specific **Legal Basis** citation (e.g., "Section 145 of Bharatiya Sakshya Adhiniyam" for contradictions, or relevant case law logic for omissions).
+
+    Output Format (JSON):
+    {{
+        "explanation": "...",
+        "legal_basis": "..."
+    }}
+
+    IMPORTANT: Output the content in {target_lang_name} language.
+    """
+
+    try:
+        response = model.generate_content(
+            prompt,
+            generation_config={"response_mime_type": "application/json"}
+        )
+        import json
+        data = json.loads(response.text)
+        
+        row.explanation = data.get("explanation", row.explanation)
+        row.legal_basis = data.get("legal_basis", row.legal_basis)
+        
+    except Exception as e:
+        print(f"Refinement Error: {e}")
+        # On error, keep original row
+        
+    return row

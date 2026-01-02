@@ -222,7 +222,12 @@ async def analyze_statements(request: AnalyzeRequest):
             row = apply_legal_heuristics(comparison_result, e1, e2)
             
             if row.classification != "consistent":
-                 report_rows.append(row)
+                # Refine and Translate explanation using Gemini
+                # This replaces the simple translation step with a full enhancement pass
+                from translation import refine_legal_explanation
+                row = await refine_legal_explanation(row, detected_lang)
+                
+                report_rows.append(row)
                  
     print(f"Comparison Stats: processed={processed_count}, skipped={skipped_count}, discrepancies={len(report_rows)}")
 

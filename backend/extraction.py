@@ -11,24 +11,27 @@ async def extract_events_from_text(text: str, statement_type: str) -> list[Event
     """
     Uses Gemini API to extract structured events.
     """
-    if not GEMINI_API_KEY:
-        print("Error: GEMINI_API_KEY not set.")
-        return []
-
-    model = genai.GenerativeModel(GEMINI_MODEL_NAME)
+    response_text = ""
     
     prompt = EXTRACTION_PROMPT.format(statement_type=statement_type, text=text)
-
     print(f"DEBUG: Extracting from text (len={len(text)}): {text[:50]}...")
+
     try:
+        if not GEMINI_API_KEY:
+            print("Error: GEMINI_API_KEY not set.")
+            return []
+        
+        model = genai.GenerativeModel(GEMINI_MODEL_NAME)
         response = model.generate_content(
             prompt,
             generation_config={"response_mime_type": "application/json"}
         )
-        print(f"DEBUG: LLM Raw Response: {response.text}")
+        response_text = response.text
+            
+        print(f"DEBUG: LLM Raw Response: {response_text}")
         
         # Clean the response - sometimes LLM adds markdown or extra text
-        response_text = response.text.strip()
+        response_text = response_text.strip()
         if response_text.startswith("```json"):
             response_text = response_text[7:]  # Remove ```json
         if response_text.startswith("```"):

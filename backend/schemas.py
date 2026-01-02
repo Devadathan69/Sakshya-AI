@@ -37,6 +37,7 @@ class ReportRow(BaseModel):
     classification: Literal["contradiction", "omission", "consistent", "minor_discrepancy"]
     severity: Literal["Minor", "Material", "Critical"]
     legal_basis: str
+    explanation: str
     source_sentence_refs: List[str]
     # For transparency, we might want original and English refs?
     # For now, source_sentence_refs will hold the ORIGINAL text logic if we map back.

@@ -23,6 +23,10 @@ The system identifies **semantic contradictions** and **material omissions** bet
   - Action Compatibility Checks
   - Presence vs. Participation distinction
   - FIR omission handling
+
+- **🗣️ Speech-to-Text (New)**:
+  - Integration with **Sarvam AI** for high-accuracy transcription of Indian language audio sources
+  - Supports direct audio upload for analysis
   
 - **📄 Document Processing**:
   - **PDF Support**: Typed PDFs via `pdfplumber`
@@ -48,7 +52,8 @@ The system identifies **semantic contradictions** and **material omissions** bet
 | **Backend** | Python 3.10+, FastAPI, Uvicorn |
 | **Frontend** | React 19.2, TypeScript, Vite, TailwindCSS |
 | **Auth & DB** | Firebase Authentication, Cloud Firestore |
-| **AI Engine** | Google Gemini 2.5 Flash (`gemini-2.5-flash`) |
+| **AI Engine** | **Hybrid Pipeline**: <br>1. **Extraction**: Google Gemini 2.5 Flash <br>2. **Analysis**: **Fine-Tuned Qwen 2.5 7B** (Hosted on **Modal**) |
+| **Speech-to-Text** | **Sarvam AI** (for Indian languages) |
 | **Language Detection** | langdetect |
 | **OCR** | Remote PaddleOCR API, pdfplumber, OpenCV |
 
@@ -101,7 +106,9 @@ Then edit `backend/.env` with your actual API keys:
 
 ```env
 GEMINI_API_KEY=your_actual_gemini_api_key_here
-GEMINI_MODEL_NAME=gemini-2.5-flash
+GEMINI_MODEL_NAME=gemini-2.5-flash-lite
+MODAL_API_URL=https://your-modal-app-url.modal.run   # For Fine-Tuned Model
+SARVAM_API_KEY=your_sarvam_api_key                  # For Speech-to-Text
 PADDLE_OCR_URL=https://your-paddle-ocr-endpoint.com  # Optional
 ```
 
@@ -421,6 +428,13 @@ For issues, feature requests, or feedback:
 - ✅ Updated to Google Gemini 2.5 Flash model
 - ✅ Better `.env` configuration handling with `.env.example` template
 - ✅ Comprehensive `.gitignore` for Python/Node.js projects
+
+## 🔄 Recent Updates (v1.2)
+
+- ✅ **Fine-Tuned Legal Model**: Integrated **Qwen 2.5 7B (LoRA Fine-Tuned)** hosted on Modal for specialized legal reasoning and Section 145 analysis.
+- ✅ **Hybrid AI Pipeline**: Combines Gemini for extraction/translation with the custom model for analysis.
+- ✅ **Speech-to-Text Integration**: Added **Sarvam AI** support for transcribing audio evidence in Indian languages.
+- ✅ **Enhanced Refinement**: Uses LLM to explain discrepancies in the original language with legal citations.
 
 ---
 
