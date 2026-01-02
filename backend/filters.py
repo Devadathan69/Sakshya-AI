@@ -44,46 +44,27 @@ def are_actions_compatible(action1: str, action2: str) -> bool:
 # --- RULE B: ACTOR CONSISTENCY ---
 def are_actors_consistent(actor1: str, actor2: str) -> bool:
     """
-    Returns True if actors are likely the same person or if one is a pronoun/generic.
-    Stricter filtering to avoid comparing "John did X" vs "Mary did Y".
-    """
-    a1 = actor1.lower().strip()
-    a2 = actor2.lower().strip()
-
-    # 1. Exact Match
-    if a1 == a2:
-        return True
-
-    # 2. Allow Pronouns/Generic (Permissive fallback)
-    # If we filter these out, we might miss "I went" vs "Raju went" (if I=Raju)
-    # But we definitely want to block "Raju" vs "Noel"
-    generics = {"i", "he", "she", "they", "we", "witness", "unknown", "accused", "victim"}
-    if a1 in generics or a2 in generics:
-        return True
-
-    # 3. Fuzzy Token Match (e.g. "Raju" vs "Raju Kumar")
-    tokens1 = set(a1.split())
-    tokens2 = set(a2.split())
+    Returns True if actors are possibly the same or if we should compare them anyway.
     
-    # If share any substantive token
-    if not tokens1.isdisjoint(tokens2):
-        return True
-
-    # Otherwise, assume different people -> Skip comparison
-    return False
+    CRITICAL CHANGE (V2): Strict string matching fails for Multi-Lingual inputs 
+    (e.g., 'Njan' vs 'ഞൻ') and semantic variations ('Accused' vs 'Raju').
+    
+    For Legal Tech, Recall > Precision. It is safer to send unrelated events to 
+    the LLM (which will return 'consistent') than to suppress valid contradictions 
+    via regex.
+    """
+    return True
 
 # --- MAIN FILTER FUNCTION ---
 def should_compare_events(e1: Event, e2: Event) -> bool:
     """
     Determines if two events should be passed to the LLM.
     """
-    # Rule B: Actor Consistency (Strict)
+    # Rule B: Actor Consistency (Disabled for V2 High-Recall Mode)
+    # Ref: User issue where "Njan" (Mal) vs "Devadathan" was skipped.
     if not are_actors_consistent(e1.actor, e2.actor):
+        # logging.debug(f"Skipping due to actor mismatch: {e1.actor} vs {e2.actor}")
         return False
-    
-    # If Actors match, we generally compare them to check for contradictions in actions (e.g. Sleeping vs Stabbing)
-    # So Action Compatibility is less important to filter *out*, but can be used to prioritize.
-    # For now, if actors match, we compare.
     
     return True
 

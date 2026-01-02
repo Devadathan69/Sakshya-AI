@@ -105,41 +105,39 @@ Location: {location_2}
 LEGAL CLASSIFICATION RULES
 ====================
 
-Classify the relationship as EXACTLY ONE of the following:
+Classify the relationship as EXACTLY ONE of the following.
+Choose the MOST SPECIFIC category that applies.
 
-1. contradiction
-   - Direct conflict in participation or facts
+1. consistent (DEFAULT if uncertain)
+   - Both events assert compatible facts, OR
+   - The events describe DIFFERENT, INDEPENDENT facts that are not mutually exclusive.
+   - Example (Compatible): "A hit B" vs "A assaulted B"
+   - Example (Independent): "I was at the tea shop" (Location) vs "I saw them fight" (Observation). These are NOT contradictions.
+
+2. contradiction
+   - LOGICAL IMPOSSIBILITY: Both statements cannot be true at the same time.
+   - Direct conflict in participation, location, or core facts.
    - Example:
-     "A assaulted B" vs "A was only standing nearby"
-     "A stabbed B" vs "A did not assault B"
+     "A assaulted B" vs "A was NOT there at all"
+     "A stabbed B" vs "A only pushed B" (Material difference in aggression)
 
-2. omission
-   - One event mentions a fact that the other is silent about
-   - Use ONLY when:
-     - The silence does NOT negate the fact
-     - FIR silence is treated cautiously
-   - Example:
-     FIR mentions assault, later statement adds weapon
-
-3. consistent
-   - Both events assert compatible facts
-   - Minor wording differences allowed
+3. omission
+   - One event mentions a MATERIAL fact that the other is entirely silent about.
+   - The silence implies a potential inconsistency, but not a direct lie.
+   - Example: FIR mentions assault, later statement adds a specific weapon.
 
 4. minor_discrepancy
-   - Slight differences in:
-     - Time (e.g., 4:00 PM vs 4:30 PM)
-     - Location description
-   - Does NOT affect the core act
+   - Slight differences in non-material details (Time +/- 30 mins, specific location descriptors).
 
 ====================
 CRITICAL LEGAL GUIDELINES
 ====================
 
-- Presence vs participation mismatch → CONTRADICTION
-- Active assault vs passive presence → CONTRADICTION
-- Weapon mismatch → CONTRADICTION or MATERIAL (explain)
-- FIR omissions are COMMON and should NOT automatically be contradictions
-- If unsure, choose the LESS severe classification
+- **The "Different Aspect" Rule**: If Event 1 describes WHERE they were, and Event 2 describes WHAT they saw, this is **consistent**. Do NOT mark it as a contradiction unless the location makes the observation impossible.
+- Presence vs Participation mismatch → CONTRADICTION
+- Active assault vs Passive presence → CONTRADICTION
+- Weapon mismatch → CONTRADICTION
+- **False Positives**: "I am Devadathan" vs "I saw the fight". These are just two different sentences. Mark as **consistent**.
 
 ====================
 OUTPUT FORMAT (STRICT)
@@ -149,7 +147,7 @@ Return ONLY valid JSON:
 
 {{
   "classification": "contradiction | omission | consistent | minor_discrepancy",
-  "explanation": "Brief legal reasoning (1–2 sentences)"
+  "explanation": "Brief legal reasoning (1–2 sentences) explaining WHY."
 }}
 
 DO NOT:
