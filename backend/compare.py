@@ -39,6 +39,23 @@ async def compare_events(event1: Event, event2: Event) -> ComparisonResult:
 
     print(f"DEBUG: Comparing Event {event1.event_id} vs {event2.event_id}")
     
+    # --- DETERMINISTIC CHECK FOR IDENTICAL EVENTS ---
+    # If the core components are identical (or very close), skip LLM and return consistent.
+    # This prevents hallucinated contradictions for identical statements.
+    def normalize(s: str): return (s or "").lower().strip()
+    
+    if (normalize(event1.actor) == normalize(event2.actor) and
+        normalize(event1.action) == normalize(event2.action) and
+        normalize(event1.target) == normalize(event2.target)):
+        
+        print(f"DEBUG: Events {event1.event_id} and {event2.event_id} are identical. Returning consistent.")
+        return ComparisonResult(
+            event_1_id=event1.event_id,
+            event_2_id=event2.event_id,
+            classification="consistent",
+            explanation="Both statements describe the exact same event details."
+        )
+    
     prompt = COMPARISON_PROMPT.format(
         type_1=event1.statement_type,
         actor_1=event1.actor,
@@ -79,7 +96,7 @@ async def compare_events(event1: Event, event2: Event) -> ComparisonResult:
                 explanation="No valid model configuration found."
             )
             
-        print(f"DEBUG: Comparison LLM Response: {response_text}")
+        # print(f"DEBUG: Comparison LLM Response: {response_text}")
         
         # Clean response
         response_text = response_text.strip()

@@ -58,6 +58,24 @@ class UploadResponse(BaseModel):
     message: str
     content_preview: str
 
+# --- Multi-Witness Models ---
+
+class WitnessInput(BaseModel):
+    id: str  # Frontend generated ID (e.g., "w1", "w2") or sequential
+    name: str # "PW-1", "Eyewitness", etc.
+    text: str # The transcribed statement
+    type: str # "FIR", "161", etc.
+
+class MultiWitnessAnalyzeRequest(BaseModel):
+    witnesses: List[WitnessInput]
+
+class MultiAnalyzeResponse(BaseModel):
+    input_language: str
+    analysis_language: str
+    consolidated_report: List[ReportRow]
+    # Optional: Adjacency matrix or summary stats could go here
+    disclaimer: str
+
 class AnalyzeRequest(BaseModel):
     statement_1_text: str
     statement_1_type: str

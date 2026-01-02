@@ -10,7 +10,7 @@ if not GEMINI_API_KEY:
     print("WARNING: GEMINI_API_KEY not found in environment variables.")
 
 # Model configuration
-GEMINI_MODEL_NAME = "gemini-2.5-flash-lite"  # Updated to working model
+GEMINI_MODEL_NAME = "gemini-3-flash-preview"  # Updated to working model
 
 # Sarvam Speech-to-Text configuration
 SARVAM_API_KEY = os.getenv("SARVAM_API_KEY")

@@ -28,7 +28,7 @@ async def extract_events_from_text(text: str, statement_type: str) -> list[Event
         )
         response_text = response.text
             
-        print(f"DEBUG: LLM Raw Response: {response_text}")
+        # print(f"DEBUG: LLM Raw Response: {response_text}")
         
         # Clean the response - sometimes LLM adds markdown or extra text
         response_text = response_text.strip()
@@ -46,15 +46,24 @@ async def extract_events_from_text(text: str, statement_type: str) -> list[Event
 
         events: list[Event] = []
         for e in events_data:
+            # Sanitize inputs: LLM might return None for actor/action
+            safe_actor = e.get("actor")
+            if safe_actor is None:
+                safe_actor = "Unknown"
+            
+            safe_action = e.get("action")
+            if safe_action is None:
+                safe_action = "Unknown"
+
             events.append(Event(
-                event_id=f"{statement_type}_{len(events)+1}",  # Simple ID generation
-                actor=e.get("actor", "Unknown"),
-                action=e.get("action", "Unknown"),
+                event_id=f"{statement_type}_{len(events)+1}",
+                actor=str(safe_actor), # Ensure string
+                action=str(safe_action), # Ensure string
                 target=e.get("target"),
                 time=e.get("time"),
                 location=e.get("location"),
                 source_sentence=e.get("source_sentence", ""),
-                statement_type=statement_type,  # Force the type
+                statement_type=statement_type,  
             ))
 
         # Fallback: if the LLM did not extract any events but the text

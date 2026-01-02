@@ -1,13 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 @import "tailwindcss";
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: dark;
+  color: #e2e8f0;
+  background-color: #020617;
+  /* Deepest Navy/Black */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -18,16 +20,116 @@
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  @apply bg-slate-900 text-white;
+  /* Radical dark theme with subtle grid pattern */
+  background-color: #020617;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  @apply text-slate-200 selection:bg-amber-500/30 selection:text-amber-100;
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
   width: 100%;
+  margin: 0 auto;
+}
+
+/* Typography Overrides */
+h1,
+h2,
+h3,
+h4,
+.font-serif {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Custom Scrollbar - Slim & Sharp */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 0;
+  /* Sharp corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* "Legal Tech" Component Utilities */
+
+/* The "Panel" - Sharp, bordered, dark */
+.legal-panel {
+  @apply bg-[#0B1120] border border-slate-800 shadow-2xl relative overflow-hidden;
+}
+
+.legal-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+/* Inputs - Technical & Precise */
+.input-field {
+  @apply bg-[#0F172A] border border-slate-700 rounded-none px-4 py-3 text-slate-100 font-mono text-sm focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 outline-none transition-all placeholder:text-slate-600;
+}
+
+/* Primary Button - Authoritative */
+.btn-primary {
+  @apply bg-slate-100 text-slate-900 border border-white font-serif font-bold tracking-wide py-3 px-8 hover:bg-amber-50 hover:text-black transition-all;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Secondary Button - Subtle */
+.btn-secondary {
+  @apply bg-transparent text-slate-400 border border-slate-700 font-medium py-3 px-8 hover:text-white hover:border-slate-500 transition-all;
+}
+
+/* Card Hover Effect */
+.hover-card-effect {
+  @apply transition-all duration-300 hover:border-slate-600 hover:bg-[#111827];
 }

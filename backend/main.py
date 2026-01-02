@@ -9,14 +9,18 @@ from schemas import (
     ExtractedEvents,
     UploadResponse,
     SpeechToTextResponse,
+    MultiWitnessAnalyzeRequest,
+    MultiAnalyzeResponse,
 )
 from ingestion import clean_text
 from extraction import extract_events_from_text
-from compare import compare_events
+from compare import compare_events, comparison_cache
+from filters import should_compare_events
 from heuristics import apply_legal_heuristics
 from report import generate_final_report
-from filters import should_compare_events, group_omissions, comparison_cache
-from translation import detect_language, translate_to_english, translate_text
+from ocr import extract_text_from_file
+from translation import detect_language, translate_text, refine_legal_explanation
+from multi_witness import process_multi_witness_analysis
 from ocr import extract_text_from_file
 from config import SARVAM_API_KEY, SARVAM_STT_URL, SARVAM_STT_MODEL
 
@@ -39,61 +43,59 @@ def health_check():
 
 
 @app.post("/speech-to-text", response_model=SpeechToTextResponse)
-async def speech_to_text(
+@app.post("/speech-to-text", response_model=SpeechToTextResponse)
+def speech_to_text(
     file: UploadFile = File(...),
-    statement_type: str = Form("generic"),  # kept for future routing/analytics
+    statement_type: str = Form("generic"),
 ):
     """Transcribe an uploaded audio file using the Sarvam STT API.
-
-    The exact Sarvam API contract (endpoint, fields) is configured via
-    environment variables in backend/.env and loaded in config.py.
+    
+    NOTE: This is a synchronous function to allow 'requests' to run in a threadpool
+    without blocking the main asyncio loop.
     """
 
     if not SARVAM_API_KEY:
+        print("ERROR: SARVAM_API_KEY is missing.")
         raise HTTPException(
             status_code=500,
             detail="Sarvam STT is not configured (missing SARVAM_API_KEY)",
         )
 
     try:
-        audio_bytes = await file.read()
+        # File.read() is async, but accessing .file directly or using read() in sync path:
+        # FastAPI UploadFile often wraps a SpooledTemporaryFile.
+        # Ideally we use async read, but we are in sync function.
+        # We can use file.file.read()
+        audio_bytes = file.file.read() 
 
-        # Match Sarvam curl example:
-        # curl -X POST https://api.sarvam.ai/speech-to-text \
-        #   -H "api-subscription-key: <apiKey>" \
-        #   -H "Content-Type: multipart/form-data" \
-        #   -F file=@<path>
+        print(f"DEBUG: sending {len(audio_bytes)} bytes to Sarvam (filename={file.filename})")
+
         headers = {
             "api-subscription-key": SARVAM_API_KEY,
         }
 
+        # Sarvam might prefer 'audio/wav' or similar. 
+        # We send what we get, but ensure filename has extension.
         files = {
             "file": (
-                file.filename or "audio.wav",
+                file.filename or "audio.webm",
                 audio_bytes,
-                file.content_type or "audio/mpeg",
+                file.content_type or "audio/webm",
             )
         }
 
-        # Basic STT call as per docs – no extra form fields required.
         resp = requests.post(SARVAM_STT_URL, headers=headers, files=files, timeout=60)
 
         if resp.status_code != 200:
-            try:
-                err_body = resp.json()
-            except Exception:
-                err_body = resp.text
+            print(f"ERROR: Sarvam returned {resp.status_code} - {resp.text}")
             raise HTTPException(
                 status_code=502,
-                detail=f"Sarvam STT request failed with status {resp.status_code}: {err_body}",
+                detail=f"Sarvam API Error ({resp.status_code}): {resp.text}",
             )
 
-        try:
-            payload = resp.json()
-        except Exception as e:  # pragma: no cover - defensive
-            raise HTTPException(status_code=502, detail=f"Invalid JSON from Sarvam STT: {e}")
+        payload = resp.json()
+        print(f"DEBUG: Sarvam Response: {str(payload)[:200]}...")
 
-        # Try common field names for the transcribed text.
         text = (
             payload.get("text")
             or payload.get("transcript")
@@ -102,6 +104,7 @@ async def speech_to_text(
         )
 
         if not text:
+            print("ERROR: No text field in Sarvam response.")
             raise HTTPException(
                 status_code=502,
                 detail="Sarvam STT response did not contain a transcription field.",
@@ -117,8 +120,10 @@ async def speech_to_text(
     except HTTPException:
         raise
     except Exception as e:
-        print(f"Speech-to-text error: {e}")
-        raise HTTPException(status_code=500, detail=f"Internal STT error: {e}")
+        print(f"Speech-to-text exception: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Internal STT error: {str(e)}")
 
 @app.post("/upload-document", response_model=UploadResponse)
 async def upload_document(
@@ -167,7 +172,7 @@ async def analyze_statements(request: AnalyzeRequest):
     
     # Detect from combined text for better accuracy
     detected_lang = detect_language(origin_text1[:500] + " " + origin_text2[:500])
-    print(f"DEBUG: Detected Language: {detected_lang}")
+    # print(f"DEBUG: Detected Language: {detected_lang}")
 
     # Process in the original input language.
     # Prompts have been updated to instruct the LLM to respond in the same language
@@ -245,6 +250,23 @@ async def analyze_statements(request: AnalyzeRequest):
     report.analysis_language = detected_lang
 
     return report
+
+@app.post("/analyze-multi", response_model=MultiAnalyzeResponse)
+async def analyze_multi_witness(request: MultiWitnessAnalyzeRequest):
+    """
+    V2: Multi-Witness Analysis Endpoint.
+    Compares N witness statements against each other.
+    """
+    print(f"!!! RECEIVING MULTI-WITNESS REQUEST: {len(request.witnesses)} witnesses !!!")
+    
+    try:
+        response = await process_multi_witness_analysis(request.witnesses)
+        return response
+    except Exception as e:
+        print(f"Error in multi-analysis: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn
