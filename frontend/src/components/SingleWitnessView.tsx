@@ -232,10 +232,10 @@ export default function SingleWitnessView() {
         <div className="animate-slide-up pb-20 max-w-6xl mx-auto">
             {/* Header / Intro */}
             {!report && !loading && (
-                <div className="mb-12 border-b border-slate-800 pb-6 flex justify-between items-end">
+                <div className="mb-12 border-b pb-6 flex justify-between items-end" style={{ borderColor: 'var(--border-color)' }}>
                     <div>
-                        <h2 className="text-4xl font-serif text-slate-100 mb-2">Single Witness Analysis</h2>
-                        <p className="font-mono text-xs text-amber-500 uppercase tracking-widest">
+                        <h2 className="text-4xl font-serif mb-2" style={{ color: 'var(--text-primary)' }}>Single Witness Analysis</h2>
+                        <p className="font-mono text-xs text-amber-600 dark:text-amber-500 uppercase tracking-widest">
                             Sequence Comparison // FIR vs Deposition
                         </p>
                     </div>
@@ -247,12 +247,12 @@ export default function SingleWitnessView() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     {/* Statement 1 Panel */}
                     <div className="legal-panel p-0 group">
-                        <div className="bg-slate-900/50 p-4 border-b border-slate-800 flex justify-between items-center text-xs font-mono text-slate-500 uppercase tracking-wider">
+                        <div className="p-4 border-b flex justify-between items-center text-xs font-mono uppercase tracking-wider" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                             <span>STATEMENT 01</span>
                         </div>
                         <div className="p-6">
                             <div className="mb-6">
-                                <label className="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-widest">Type</label>
+                                <label className="text-[10px] uppercase font-bold block mb-2 tracking-widest" style={{ color: 'var(--text-secondary)' }}>Type</label>
                                 <select
                                     value={s1Type}
                                     onChange={(e) => setS1Type(e.target.value)}
@@ -267,20 +267,23 @@ export default function SingleWitnessView() {
 
                             <div className="flex items-center gap-2 mb-2">
                                 <input type="file" id="file-1" className="hidden" accept=".pdf,.png,.jpg" onChange={(e) => handleFileUpload(e, setS1Text, s1Type)} />
-                                <label htmlFor="file-1" className="cursor-pointer text-xs px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors flex items-center gap-2 font-mono group-hover/btn:text-white">
+                                <label htmlFor="file-1" className="cursor-pointer text-xs px-3 py-2 border transition-colors flex items-center gap-2 font-mono group-hover/btn:text-white"
+                                    style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                                     <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                                     UPLOAD DOC
                                 </label>
 
                                 <input type="file" id="audio-1" className="hidden" accept="audio/*" onChange={(e) => handleAudioUpload(e, setS1Text, s1Type, 's1')} />
-                                <label htmlFor="audio-1" className="cursor-pointer text-xs px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors flex items-center gap-2 font-mono">
+                                <label htmlFor="audio-1" className="cursor-pointer text-xs px-3 py-2 border transition-colors flex items-center gap-2 font-mono"
+                                    style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                                     <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
                                     UPLOAD AUDIO
                                 </label>
 
                                 <button
                                     onClick={() => recordingTarget === 's1' ? stopRecording() : startRecording('s1')}
-                                    className={`text-xs px-3 py-2 border flex items-center gap-2 transition-all font-mono ${recordingTarget === 's1' ? "bg-red-900/50 border-red-500 text-red-200 animate-pulse" : "bg-slate-800 border-slate-700 hover:bg-slate-700 text-slate-300"}`}
+                                    className={`text-xs px-3 py-2 border flex items-center gap-2 transition-all font-mono ${recordingTarget === 's1' ? "bg-red-900/50 border-red-500 text-red-200 animate-pulse" : ""}`}
+                                    style={recordingTarget !== 's1' ? { backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' } : {}}
                                 >
                                     {recordingTarget === 's1' ? (
                                         <><div className="w-2 h-2 bg-red-500 rounded-full animate-ping" /> STOP REC</>
@@ -296,7 +299,8 @@ export default function SingleWitnessView() {
                             <textarea
                                 value={s1Text}
                                 onChange={(e) => setS1Text(e.target.value)}
-                                className="input-field w-full h-80 resize-none mb-0 font-mono text-xs leading-relaxed border-t border-slate-700"
+                                className="input-field w-full h-80 resize-none mb-0 font-mono text-xs leading-relaxed border-t"
+                                style={{ borderColor: 'var(--border-color)' }}
                                 placeholder=">> Paste first statement text here..."
                             />
                         </div>
@@ -304,12 +308,12 @@ export default function SingleWitnessView() {
 
                     {/* Statement 2 Panel */}
                     <div className="legal-panel p-0 group">
-                        <div className="bg-slate-900/50 p-4 border-b border-slate-800 flex justify-between items-center text-xs font-mono text-slate-500 uppercase tracking-wider">
+                        <div className="p-4 border-b flex justify-between items-center text-xs font-mono uppercase tracking-wider" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                             <span>STATEMENT 02</span>
                         </div>
                         <div className="p-6">
                             <div className="mb-6">
-                                <label className="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-widest">Type</label>
+                                <label className="text-[10px] uppercase font-bold block mb-2 tracking-widest" style={{ color: 'var(--text-secondary)' }}>Type</label>
                                 <select
                                     value={s2Type}
                                     onChange={(e) => setS2Type(e.target.value)}
@@ -324,20 +328,23 @@ export default function SingleWitnessView() {
 
                             <div className="flex items-center gap-2 mb-2">
                                 <input type="file" id="file-2" className="hidden" accept=".pdf,.png,.jpg" onChange={(e) => handleFileUpload(e, setS2Text, s2Type)} />
-                                <label htmlFor="file-2" className="cursor-pointer text-xs px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors flex items-center gap-2 font-mono group-hover/btn:text-white">
+                                <label htmlFor="file-2" className="cursor-pointer text-xs px-3 py-2 border transition-colors flex items-center gap-2 font-mono group-hover/btn:text-white"
+                                    style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                                     <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                                     UPLOAD DOC
                                 </label>
 
                                 <input type="file" id="audio-2" className="hidden" accept="audio/*" onChange={(e) => handleAudioUpload(e, setS2Text, s2Type, 's2')} />
-                                <label htmlFor="audio-2" className="cursor-pointer text-xs px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors flex items-center gap-2 font-mono">
+                                <label htmlFor="audio-2" className="cursor-pointer text-xs px-3 py-2 border transition-colors flex items-center gap-2 font-mono"
+                                    style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                                     <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
                                     UPLOAD AUDIO
                                 </label>
 
                                 <button
                                     onClick={() => recordingTarget === 's2' ? stopRecording() : startRecording('s2')}
-                                    className={`text-xs px-3 py-2 border flex items-center gap-2 transition-all font-mono ${recordingTarget === 's2' ? "bg-red-900/50 border-red-500 text-red-200 animate-pulse" : "bg-slate-800 border-slate-700 hover:bg-slate-700 text-slate-300"}`}
+                                    className={`text-xs px-3 py-2 border flex items-center gap-2 transition-all font-mono ${recordingTarget === 's2' ? "bg-red-900/50 border-red-500 text-red-200 animate-pulse" : ""}`}
+                                    style={recordingTarget !== 's2' ? { backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' } : {}}
                                 >
                                     {recordingTarget === 's2' ? (
                                         <><div className="w-2 h-2 bg-red-500 rounded-full animate-ping" /> STOP REC</>
@@ -353,7 +360,8 @@ export default function SingleWitnessView() {
                             <textarea
                                 value={s2Text}
                                 onChange={(e) => setS2Text(e.target.value)}
-                                className="input-field w-full h-80 resize-none mb-0 font-mono text-xs leading-relaxed border-t border-slate-700"
+                                className="input-field w-full h-80 resize-none mb-0 font-mono text-xs leading-relaxed border-t"
+                                style={{ borderColor: 'var(--border-color)' }}
                                 placeholder=">> Paste second statement text here..."
                             />
                         </div>
@@ -363,7 +371,7 @@ export default function SingleWitnessView() {
 
             {/* Action Button */}
             {!report && !loading && (
-                <div className="flex justify-start pt-8 border-t border-slate-800 mt-8">
+                <div className="flex justify-start pt-8 border-t mt-8" style={{ borderColor: 'var(--border-color)' }}>
                     <button
                         onClick={handleAnalyze}
                         disabled={!s1Text || !s2Text}
@@ -376,25 +384,27 @@ export default function SingleWitnessView() {
 
             {/* Loading Overlay */}
             {loading && (
-                <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center">
-                    <div className="relative w-24 h-24 mb-6">
-                        <div className="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
-                        <div className="absolute inset-0 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin"></div>
+                <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-md" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                    <div className="legal-panel p-8 flex flex-col items-center shadow-2xl">
+                        <div className="relative w-16 h-16 mb-6">
+                            <div className="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
+                            <div className="absolute inset-0 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin"></div>
+                        </div>
+                        <h3 className="text-xl font-serif font-bold mb-2 text-white">Analyzing Discrepancies</h3>
+                        <p className="font-mono text-xs uppercase tracking-widest text-slate-400 animate-pulse">Cross-referencing legal texts...</p>
                     </div>
-                    <h3 className="text-2xl font-serif font-bold text-white mb-2">Analyzing Discrepancies</h3>
-                    <p className="text-slate-400 animate-pulse font-mono text-xs uppercase tracking-widest">Cross-referencing legal texts...</p>
                 </div>
             )}
 
             {/* Report Section */}
             {report && (
                 <div className="animate-fade-in space-y-8">
-                    <div className="flex flex-col md:flex-row justify-between items-end bg-slate-900/50 p-6 border border-slate-800 backdrop-blur-sm">
+                    <div className="flex flex-col md:flex-row justify-between items-end p-6 border backdrop-blur-sm" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)' }}>
                         <div>
-                            <span className="text-amber-500 text-xs font-bold uppercase tracking-wider mb-2 block">Analysis Complete</span>
-                            <h2 className="text-3xl font-serif font-bold text-white mb-2">Analysis Report</h2>
+                            <span className="text-amber-600 dark:text-amber-500 text-xs font-bold uppercase tracking-wider mb-2 block">Analysis Complete</span>
+                            <h2 className="text-3xl font-serif font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Analysis Report</h2>
                             {report.input_language !== 'en' && (
-                                <span className="text-xs text-slate-500 mt-1 font-mono">
+                                <span className="text-xs mt-1 font-mono" style={{ color: 'var(--text-secondary)' }}>
                                     DETECTED LANGUAGE: {report.input_language.toUpperCase()}
                                 </span>
                             )}
@@ -406,15 +416,15 @@ export default function SingleWitnessView() {
 
                     <ConfrontationTable rows={report.rows} />
 
-                    <div className="p-6 border border-slate-800 bg-slate-900/30 text-xs text-slate-500 leading-relaxed font-mono">
-                        <p className="font-bold mb-2 uppercase tracking-wider text-slate-400">Legal Disclaimer</p>
+                    <div className="p-6 border text-xs leading-relaxed font-mono" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
+                        <p className="font-bold mb-2 uppercase tracking-wider opacity-70">Legal Disclaimer</p>
                         <p>{report.disclaimer}</p>
                     </div>
 
-                    <div className="mt-8 pt-8 border-t border-slate-800 text-slate-600 text-[10px] font-mono">
+                    <div className="mt-8 pt-8 border-t text-[10px] font-mono" style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                         <details>
                             <summary className="cursor-pointer hover:text-amber-500 transition-colors uppercase tracking-widest">Debug JSON Stream</summary>
-                            <pre className="mt-4 p-4 bg-[#050a15] border border-slate-800 overflow-auto h-64 text-slate-400">
+                            <pre className="mt-4 p-4 border overflow-auto h-64" style={{ backgroundColor: '#050a15', borderColor: 'var(--border-color)', color: '#94a3b8' }}>
                                 {JSON.stringify(report, null, 2)}
                             </pre>
                         </details>

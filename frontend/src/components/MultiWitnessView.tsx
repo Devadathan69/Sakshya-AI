@@ -242,16 +242,17 @@ export default function MultiWitnessView() {
         <div className="animate-slide-up pb-20 max-w-6xl mx-auto">
             {/* Header / Intro */}
             {!report && (
-                <div className="mb-12 border-b border-slate-800 pb-6 flex justify-between items-end">
+                <div className="mb-12 border-b pb-6 flex justify-between items-end" style={{ borderColor: 'var(--border-color)' }}>
                     <div>
-                        <h2 className="text-4xl font-serif text-slate-100 mb-2">Multi-Witness Matrix</h2>
-                        <p className="font-mono text-xs text-amber-500 uppercase tracking-widest">
+                        <h2 className="text-4xl font-serif mb-2" style={{ color: 'var(--text-primary)' }}>Multi-Witness Matrix</h2>
+                        <p className="font-mono text-xs text-amber-600 dark:text-amber-500 uppercase tracking-widest">
                             Cross-Examination Module // N*N Analysis
                         </p>
                     </div>
                     <button
                         onClick={addWitness}
-                        className="btn-secondary text-xs uppercase tracking-wider flex items-center gap-2 hover:bg-slate-800"
+                        className="btn-secondary text-xs uppercase tracking-wider flex items-center gap-2"
+                        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
                     >
                         <span>+ Add Witness</span>
                     </button>
@@ -265,11 +266,11 @@ export default function MultiWitnessView() {
                         {witnesses.map((w, idx) => (
                             <div key={w.id} className="legal-panel p-0 group">
                                 {/* Header Strip */}
-                                <div className="bg-slate-900/50 p-4 border-b border-slate-800 flex justify-between items-center text-xs font-mono text-slate-500 uppercase tracking-wider">
+                                <div className="p-4 border-b flex justify-between items-center text-xs font-mono uppercase tracking-wider" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                                     <span>STATEMENT #{idx + 1}</span>
                                     <button
                                         onClick={() => removeWitness(w.id)}
-                                        className="hover:text-red-400 transition-colors"
+                                        className="hover:text-red-500 transition-colors"
                                     >
                                         [ DISCARD ]
                                     </button>
@@ -279,7 +280,7 @@ export default function MultiWitnessView() {
                                     {/* Witness Header Inputs */}
                                     <div className="flex gap-4 mb-6">
                                         <div className="flex-1">
-                                            <label className="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-widest">Witness Identity</label>
+                                            <label className="text-[10px] uppercase font-bold block mb-2 tracking-widest" style={{ color: 'var(--text-secondary)' }}>Witness Identity</label>
                                             <input
                                                 value={w.name}
                                                 onChange={(e) => updateWitness(w.id, 'name', e.target.value)}
@@ -288,7 +289,7 @@ export default function MultiWitnessView() {
                                             />
                                         </div>
                                         <div className="w-1/3">
-                                            <label className="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-widest">Type</label>
+                                            <label className="text-[10px] uppercase font-bold block mb-2 tracking-widest" style={{ color: 'var(--text-secondary)' }}>Type</label>
                                             <select
                                                 value={w.type}
                                                 onChange={(e) => updateWitness(w.id, 'type', e.target.value)}
@@ -305,20 +306,24 @@ export default function MultiWitnessView() {
                                     {/* Action Toolbar */}
                                     <div className="flex items-center gap-2 mb-2">
                                         <input type="file" id={`file-${w.id}`} className="hidden" accept=".pdf,.png,.jpg" onChange={(e) => handleFileUpload(e, w.id, w.type)} />
-                                        <label htmlFor={`file-${w.id}`} className="cursor-pointer text-xs px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors flex items-center gap-2 font-mono">
+                                        <label htmlFor={`file-${w.id}`} className="cursor-pointer text-xs px-3 py-2 border transition-colors flex items-center gap-2 font-mono"
+                                            style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                                             <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                                             DOC
                                         </label>
 
                                         <input type="file" id={`audio-${w.id}`} className="hidden" accept="audio/*" onChange={(e) => handleAudioUpload(e, w.id, w.type)} />
-                                        <label htmlFor={`audio-${w.id}`} className="cursor-pointer text-xs px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors flex items-center gap-2 font-mono">
+                                        <label htmlFor={`audio-${w.id}`} className="cursor-pointer text-xs px-3 py-2 border transition-colors flex items-center gap-2 font-mono"
+                                            style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                                             <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
                                             AUDIO
                                         </label>
 
                                         <button
                                             onClick={() => recordingId === w.id ? stopRecording() : startRecording(w.id)}
-                                            className={`text-xs px-3 py-2 border flex items-center gap-2 transition-all font-mono ${recordingId === w.id ? "bg-red-900/50 border-red-500 text-red-200 animate-pulse" : "bg-slate-800 border-slate-700 hover:bg-slate-700 text-slate-300"}`}
+                                            className={`text-xs px-3 py-2 border flex items-center gap-2 transition-all font-mono ${recordingId === w.id ? "bg-red-900/50 border-red-500 text-red-200 animate-pulse" : ""}`}
+                                            style={recordingId !== w.id ? { backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' } : {}}
+
                                         >
                                             {recordingId === w.id ? (
                                                 <><div className="w-2 h-2 bg-red-500 rounded-full animate-ping" /> STOP</>
@@ -335,7 +340,8 @@ export default function MultiWitnessView() {
                                     <textarea
                                         value={w.text}
                                         onChange={(e) => updateWitness(w.id, 'text', e.target.value)}
-                                        className="input-field w-full h-40 resize-none mb-4 font-mono text-xs leading-relaxed border-t border-slate-700"
+                                        className="input-field w-full h-40 resize-none mb-4 font-mono text-xs leading-relaxed border-t"
+                                        style={{ borderColor: 'var(--border-color)' }}
                                         placeholder=">> Enter witness statement transcript..."
                                     />
                                 </div>
@@ -344,15 +350,15 @@ export default function MultiWitnessView() {
 
                         {/* Empty State / Add Placeholder */}
                         {witnesses.length === 0 && (
-                            <div className="col-span-2 border border-dashed border-slate-800 rounded p-12 text-center opacity-50">
-                                <p className="font-serif italic text-slate-600">No witnesses added yet to the dossier.</p>
+                            <div className="col-span-2 border border-dashed rounded p-12 text-center opacity-50" style={{ borderColor: 'var(--border-color)' }}>
+                                <p className="font-serif italic" style={{ color: 'var(--text-secondary)' }}>No witnesses added yet to the dossier.</p>
                             </div>
                         )}
                     </div>
 
 
                     {/* Analyze Button */}
-                    <div className="flex justify-start pt-8 border-t border-slate-800 mt-8">
+                    <div className="flex justify-start pt-8 border-t mt-8" style={{ borderColor: 'var(--border-color)' }}>
                         <button
                             onClick={handleAnalyze}
                             disabled={loading || witnesses.length < 2}
@@ -366,24 +372,26 @@ export default function MultiWitnessView() {
 
             {/* Loading Overlay */}
             {loading && (
-                <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center">
-                    <div className="relative w-24 h-24 mb-6">
-                        <div className="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
-                        <div className="absolute inset-0 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+                <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-md" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                    <div className="legal-panel p-8 flex flex-col items-center shadow-2xl">
+                        <div className="relative w-16 h-16 mb-6">
+                            <div className="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
+                            <div className="absolute inset-0 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">Analyzing Evidence</h3>
+                        <p className="animate-pulse" style={{ color: 'var(--text-secondary)' }}>Cross-referencing {witnesses.length} statements for contradictions...</p>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Analyzing Evidence</h3>
-                    <p className="text-slate-400 animate-pulse">Cross-referencing {witnesses.length} statements for contradictions...</p>
                 </div>
             )}
 
             {/* Results Section */}
             {report && (
                 <div className="animate-fade-in space-y-8">
-                    <div className="flex flex-col md:flex-row justify-between items-end bg-slate-900/50 p-6 rounded-xl border border-slate-800 backdrop-blur-sm">
+                    <div className="flex flex-col md:flex-row justify-between items-end p-6 rounded-xl border backdrop-blur-sm" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)' }}>
                         <div>
-                            <span className="text-blue-400 text-xs font-bold uppercase tracking-wider mb-2 block">Analysis Complete</span>
-                            <h2 className="text-3xl font-bold text-white mb-2">Consolidated Report</h2>
-                            <p className="text-slate-400 text-sm">
+                            <span className="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-2 block">Analysis Complete</span>
+                            <h2 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Consolidated Report</h2>
+                            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                                 Detected <strong>{report.consolidated_report.length}</strong> significant observations across {witnesses.length} witnesses.
                             </p>
                         </div>
@@ -394,7 +402,7 @@ export default function MultiWitnessView() {
 
                     <ConfrontationTable rows={report.consolidated_report} />
 
-                    <div className="p-4 rounded-lg bg-blue-500/5 border border-blue-500/10 text-xs text-blue-200/60 text-center leading-relaxed max-w-2xl mx-auto">
+                    <div className="p-4 rounded-lg bg-blue-500/5 border border-blue-500/10 text-xs text-blue-600/60 dark:text-blue-200/60 text-center leading-relaxed max-w-2xl mx-auto">
                         {report.disclaimer}
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-# ⚖️ Sakshya AI v2.0
+# ⚖️ Sakshya AI
 > **Automated Consistency Verification System for the Indian Judiciary**
 
 ![Sakshya AI Banner](https://img.shields.io/badge/Status-Production%20Ready-success) ![License](https://img.shields.io/badge/License-MIT-blue) ![Stack](https://img.shields.io/badge/Tech-FastAPI%20%7C%20React%20%7C%20LLM-blueviolet)
@@ -7,7 +7,7 @@
 
 ---
 
-## 🚀 New in Version 2.0
+## 🚀 Core Capabilities
 *   **🏛️ Neo-Legal Design System**: A complete UI overhaul featuring "Playfair Display" typography, sharp "Legal Panel" aesthetics, and a deep professional dark mode tailored for legal visibility.
 *   **🧩 Multi-Witness Matrix**: New N*N cross-verification engine. Compare 3+ witnesses simultaneously to find conflicting narratives.
 *   **🎙️ Integrated Transcription**: Native support for **Sarvam.ai** to transcribe Hindi/English audio depositions directly in the browser.

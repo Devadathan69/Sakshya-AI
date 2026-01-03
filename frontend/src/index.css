@@ -6,10 +6,17 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
-  color: #e2e8f0;
-  background-color: #020617;
-  /* Deepest Navy/Black */
+  /* CSS Variables for Theming */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-panel: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-color: #cbd5e1;
+  --accent-color: #f59e0b;
+  /* Amber */
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --grid-color: rgba(0, 0, 0, 0.05);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,18 +24,35 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.dark {
+  /* Dark Mode Overrides */
+  --bg-primary: #020617;
+  --bg-secondary: #0f172a;
+  --bg-panel: #0B1120;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --border-color: #1e293b;
+  --header-bg: rgba(15, 23, 42, 0.5);
+  /* Slate 900/50 */
+  --grid-color: rgba(255, 255, 255, 0.03);
+}
+
 body {
   margin: 0;
   display: flex;
   min-width: 320px;
   min-height: 100vh;
-  /* Radical dark theme with subtle grid pattern */
-  background-color: #020617;
+
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+
+  /* Subtle Grid Pattern */
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
   background-size: 40px 40px;
-  @apply text-slate-200 selection:bg-amber-500/30 selection:text-amber-100;
+
+  @apply transition-colors duration-300;
 }
 
 #root {
@@ -45,24 +69,23 @@ h4,
   font-family: 'Playfair Display', serif;
 }
 
-/* Custom Scrollbar - Slim & Sharp */
+/* Custom Scrollbar - Dynamic */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: var(--border-color);
   border-radius: 0;
-  /* Sharp corners */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: var(--text-secondary);
 }
 
 /* Animations */
@@ -96,11 +119,13 @@ h4,
   animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* "Legal Tech" Component Utilities */
+/* "Legal Tech" Component Utilities - Dynamic */
 
-/* The "Panel" - Sharp, bordered, dark */
+/* The "Panel" */
 .legal-panel {
-  @apply bg-[#0B1120] border border-slate-800 shadow-2xl relative overflow-hidden;
+  background-color: var(--bg-panel);
+  border-color: var(--border-color);
+  @apply border shadow-2xl relative overflow-hidden transition-colors duration-300;
 }
 
 .legal-panel::before {
@@ -110,26 +135,46 @@ h4,
   left: 0;
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
 }
 
-/* Inputs - Technical & Precise */
+/* Inputs */
 .input-field {
-  @apply bg-[#0F172A] border border-slate-700 rounded-none px-4 py-3 text-slate-100 font-mono text-sm focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 outline-none transition-all placeholder:text-slate-600;
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  @apply border rounded-none px-4 py-3 font-mono text-sm outline-none transition-all placeholder:text-slate-500;
 }
 
-/* Primary Button - Authoritative */
+.input-field:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.2);
+}
+
+/* Primary Button */
 .btn-primary {
-  @apply bg-slate-100 text-slate-900 border border-white font-serif font-bold tracking-wide py-3 px-8 hover:bg-amber-50 hover:text-black transition-all;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  @apply bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 border border-transparent dark:border-white font-serif font-bold tracking-wide py-3 px-8 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-50 dark:hover:text-black transition-all shadow-lg;
 }
 
-/* Secondary Button - Subtle */
+/* Secondary Button */
 .btn-secondary {
-  @apply bg-transparent text-slate-400 border border-slate-700 font-medium py-3 px-8 hover:text-white hover:border-slate-500 transition-all;
+  @apply bg-transparent border font-medium py-3 px-8 transition-all;
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
 }
 
 /* Card Hover Effect */
 .hover-card-effect {
-  @apply transition-all duration-300 hover:border-slate-600 hover:bg-[#111827];
+  @apply transition-all duration-300 border;
+  border-color: transparent;
+}
+
+.hover-card-effect:hover {
+  border-color: var(--border-color);
+  background-color: var(--bg-secondary);
 }
