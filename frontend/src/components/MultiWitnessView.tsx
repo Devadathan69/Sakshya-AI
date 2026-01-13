@@ -100,7 +100,7 @@ export default function MultiWitnessView() {
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, witnessId: string, type: string) => {
         if (!e.target.files?.length) return;
         const file = e.target.files[0];
-        setLoading(true); // Specific loading state if needed
+        setTranscribingId(witnessId);
 
         try {
             const formData = new FormData();
@@ -116,7 +116,7 @@ export default function MultiWitnessView() {
         } catch (err) {
             alert("Upload failed: " + (err as Error).message);
         } finally {
-            setLoading(false);
+            setTranscribingId(null);
             e.target.value = '';
         }
     };
