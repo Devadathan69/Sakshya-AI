@@ -21,16 +21,18 @@ export default function SingleWitnessView() {
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
     const [transcribingTarget, setTranscribingTarget] = useState<'s1' | 's2' | null>(null);
+    const [uploadingDocTarget, setUploadingDocTarget] = useState<'s1' | 's2' | null>(null);
 
     const handleFileUpload = async (
         e: React.ChangeEvent<HTMLInputElement>,
         setText: React.Dispatch<React.SetStateAction<string>>,
-        type: string
+        type: string,
+        target: 's1' | 's2'
     ) => {
         if (!e.target.files || e.target.files.length === 0) return;
         const file = e.target.files[0];
 
-        setLoading(true);
+        setUploadingDocTarget(target);
         try {
             const formData = new FormData();
             formData.append("file", file);
@@ -60,7 +62,7 @@ export default function SingleWitnessView() {
             console.error(err);
             alert("Failed to upload/extract text: " + (err as Error).message);
         } finally {
-            setLoading(false);
+            setUploadingDocTarget(null);
             e.target.value = '';
         }
     };
@@ -266,7 +268,7 @@ export default function SingleWitnessView() {
                             </div>
 
                             <div className="flex items-center gap-2 mb-2">
-                                <input type="file" id="file-1" className="hidden" accept=".pdf,.png,.jpg" onChange={(e) => handleFileUpload(e, setS1Text, s1Type)} />
+                                <input type="file" id="file-1" className="hidden" accept=".pdf,.png,.jpg" onChange={(e) => handleFileUpload(e, setS1Text, s1Type, 's1')} />
                                 <label htmlFor="file-1" className="cursor-pointer text-xs px-3 py-2 border transition-colors flex items-center gap-2 font-mono group-hover/btn:text-white"
                                     style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                                     <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
@@ -293,7 +295,11 @@ export default function SingleWitnessView() {
                                 </button>
 
                                 <div className="flex-1"></div>
-                                {transcribingTarget === 's1' && <div className="text-[10px] font-mono text-amber-500 animate-pulse flex items-center gap-2"><div className="w-1.5 h-1.5 bg-amber-500 rounded-full" /> PROCESSING...</div>}
+                                {(transcribingTarget === 's1' || uploadingDocTarget === 's1') && (
+                                    <div className="text-[10px] font-mono text-amber-500 animate-pulse flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 bg-amber-500 rounded-full" /> PROCESSING...
+                                    </div>
+                                )}
                             </div>
 
                             <textarea
@@ -327,7 +333,7 @@ export default function SingleWitnessView() {
                             </div>
 
                             <div className="flex items-center gap-2 mb-2">
-                                <input type="file" id="file-2" className="hidden" accept=".pdf,.png,.jpg" onChange={(e) => handleFileUpload(e, setS2Text, s2Type)} />
+                                <input type="file" id="file-2" className="hidden" accept=".pdf,.png,.jpg" onChange={(e) => handleFileUpload(e, setS2Text, s2Type, 's2')} />
                                 <label htmlFor="file-2" className="cursor-pointer text-xs px-3 py-2 border transition-colors flex items-center gap-2 font-mono group-hover/btn:text-white"
                                     style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
                                     <svg className="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
@@ -354,7 +360,11 @@ export default function SingleWitnessView() {
                                 </button>
 
                                 <div className="flex-1"></div>
-                                {transcribingTarget === 's2' && <div className="text-[10px] font-mono text-amber-500 animate-pulse flex items-center gap-2"><div className="w-1.5 h-1.5 bg-amber-500 rounded-full" /> PROCESSING...</div>}
+                                {(transcribingTarget === 's2' || uploadingDocTarget === 's2') && (
+                                    <div className="text-[10px] font-mono text-amber-500 animate-pulse flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 bg-amber-500 rounded-full" /> PROCESSING...
+                                    </div>
+                                )}
                             </div>
 
                             <textarea
